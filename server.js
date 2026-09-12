@@ -4,7 +4,7 @@ app.use(express.json());
 
 const tierPoints = {
     "HT1": 150, "LT1": 135, "HT2": 120, "LT2": 105, "HT3": 90,
-    "LT3": 75, "LT4": 60, "LT4": 45, "LT5": 30, "LT5": 15
+    "LT3": 75, "LT4": 60, "LT4": 45, "HT5": 30, "LT5": 15
 };
 
 const categories = [
@@ -134,12 +134,18 @@ app.get('/', (req, res) => {
                     tbody.innerHTML = '<tr><td colspan="5" class="empty-msg">Fetching rankings...</td></tr>';
 
                     try {
-                        const res = await fetch(\`\${supabaseUrl}/rest/v1/results?select=*\`, {
+                        // تم تحديث اسم الجدول هنا ليتطابق مع Onex Tiers الموجود في حسابك
+                        const res = await fetch(\`\${supabaseUrl}/rest/v1/Onex%20Tiers?select=*\`, {
                             headers: {
                                 'apikey': supabaseKey,
                                 'Authorization': 'Bearer ' + supabaseKey
                             }
                         });
+                        
+                        if (!res.ok) {
+                            throw new Error('Database response failed');
+                        }
+
                         const data = await res.json();
                         
                         if (!data || data.length === 0) {
@@ -193,7 +199,8 @@ app.get('/', (req, res) => {
                             \`;
                         }).join('');
                     } catch (err) {
-                        tbody.innerHTML = '<tr><td colspan="5" class="empty-msg" style="color: #f87171;">Failed to connect to database.</td></tr>';
+                        console.error(err);
+                        tbody.innerHTML = '<tr><td colspan="5" class="empty-msg" style="color: #f87171;">Failed to connect to database. Please check RLS policies.</td></tr>';
                     }
                 }
 
