@@ -133,7 +133,8 @@ app.get('/', (req, res) => {
                     tbody.innerHTML = '<tr><td colspan="5" class="empty-msg">Fetching rankings...</td></tr>';
 
                     try {
-                        const res = await fetch(\`\${supabaseUrl}/rest/v1/Onex%20Tiers?select=*\`, {
+                        // تم تحديث اسم الجدول إلى results ليتطابق مع البوت
+                        const res = await fetch(\`\${supabaseUrl}/rest/v1/results?select=*\`, {
                             headers: {
                                 'apikey': supabaseKey,
                                 'Authorization': 'Bearer ' + supabaseKey
@@ -153,7 +154,7 @@ app.get('/', (req, res) => {
 
                         let processedData = data.map(row => {
                             const playerName = row.ign || row.username || row.player || 'Unknown';
-                            const playerTier = row.tier_earned || row.tier || row.rank_earned || 'N/A';
+                            const playerTier = row.tier || row.tier_earned || 'N/A';
                             const playerGamemode = (row.gamemode || 'vanilla').toLowerCase();
                             const tierUpper = String(playerTier).toUpperCase();
                             const points = row.points || (tierPoints[tierUpper] || 50);
