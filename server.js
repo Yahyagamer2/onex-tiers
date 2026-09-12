@@ -10,7 +10,6 @@ const tierPoints = {
 const categories = [
     { id: "overall", name: "Overall", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5H15V3C15 2.45 14.55 2 14 2H10C9.45 2 9 2.45 9 3V5H5C3.9 5 3 5.9 3 7V10C3 12.21 4.79 14 7 14H7.29C8.1 15.89 10 17.22 12 17.45V20H9V22H15V20H12V17.45C14 17.22 15.9 15.89 16.71 14H17C19.21 14 21 12.21 21 10V7C21 5.9 20.1 5 19 5ZM5 10V7H9V12C7.34 12 5.97 10.74 5.03 9.14C5.01 9.42 5 9.71 5 10ZM19 10C19 10.74 18.99 9.42 18.97 9.14C18.03 10.74 16.66 12 15 12V7H19V10Z"/></svg>' },
     { id: "vanilla", name: "Vanilla", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v10l9 5 9-5V7l-9-5z" stroke="currentColor" stroke-width="2"/></svg>' },
-    { id: "crystal", name: "Crystal", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 9l9 13 9-13-9-7z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>' },
     { id: "mace", name: "Mace", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M15 2h4v4h-4V2zM13 4H7v4h6V4zM9 8H5v4h4V8zM6 14l-4 8h4l6-6H6z"/></svg>' },
     { id: "pot", name: "Pot", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 2h6v3H9V2zm1 5h4v2h-4V7zM6 10h12v11a2 2 0 01-2 2H8a2 2 0 01-2-2V10z"/></svg>' },
     { id: "sword", name: "Sword", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14.5 3.5L20.5 9.5L9 21H3V15L14.5 3.5Z"/></svg>' },
@@ -134,7 +133,6 @@ app.get('/', (req, res) => {
                     tbody.innerHTML = '<tr><td colspan="5" class="empty-msg">Fetching rankings...</td></tr>';
 
                     try {
-                        // تم تحديث اسم الجدول هنا ليتطابق مع Onex Tiers الموجود في حسابك
                         const res = await fetch(\`\${supabaseUrl}/rest/v1/Onex%20Tiers?select=*\`, {
                             headers: {
                                 'apikey': supabaseKey,
