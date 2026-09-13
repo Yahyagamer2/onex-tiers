@@ -114,7 +114,7 @@ app.get('/', (req, res) => {
                     "HT2": 160, "LT2": 140, 
                     "HT3": 120, "LT3": 100, 
                     "HT4": 80,  "LT4": 60, 
-                    "HT5": 40
+                    "HT5": 40,  "LT5": 20
                 };
 
                 async function loadLeaderboard(category = 'overall') {
@@ -143,7 +143,7 @@ app.get('/', (req, res) => {
                             const playerTier = row.tier || row.tier_earned || 'N/A';
                             const playerGamemode = (row.gamemode || 'vanilla').toLowerCase();
                             const tierUpper = String(playerTier).toUpperCase();
-                            const points = row.points || tierPointsMap[tierUpper] || 40;
+                            const points = row.points || tierPointsMap[tierUpper] || 20;
                             
                             return { playerName, playerTier, playerGamemode, points };
                         });
