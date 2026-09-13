@@ -2,14 +2,10 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-const tierPoints = {
-    "HT1": 150, "LT1": 135, "HT2": 120, "LT2": 105, "HT3": 90,
-    "LT3": 75, "LT4": 60, "HT5": 45, "HT5": 30, "LT5": 15
-};
-
 const categories = [
     { id: "overall", name: "Overall", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5H15V3C15 2.45 14.55 2 14 2H10C9.45 2 9 2.45 9 3V5H5C3.9 5 3 5.9 3 7V10C3 12.21 4.79 14 7 14H7.29C8.1 15.89 10 17.22 12 17.45V20H9V22H15V20H12V17.45C14 17.22 15.9 15.89 16.71 14H17C19.21 14 21 12.21 21 10V7C21 5.9 20.1 5 19 5ZM5 10V7H9V12C7.34 12 5.97 10.74 5.03 9.14C5.01 9.42 5 9.71 5 10ZM19 10C19 10.74 18.99 9.42 18.97 9.14C18.03 10.74 16.66 12 15 12V7H19V10Z"/></svg>' },
     { id: "vanilla", name: "Vanilla", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v10l9 5 9-5V7l-9-5z" stroke="currentColor" stroke-width="2"/></svg>' },
+    { id: "crystal", name: "Crystal", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>' },
     { id: "mace", name: "Mace", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M15 2h4v4h-4V2zM13 4H7v4h6V4zM9 8H5v4h4V8zM6 14l-4 8h4l6-6H6z"/></svg>' },
     { id: "pot", name: "Pot", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 2h6v3H9V2zm1 5h4v2h-4V7zM6 10h12v11a2 2 0 01-2 2H8a2 2 0 01-2-2V10z"/></svg>' },
     { id: "sword", name: "Sword", icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14.5 3.5L20.5 9.5L9 21H3V15L14.5 3.5Z"/></svg>' },
@@ -38,47 +34,36 @@ app.get('/', (req, res) => {
                     --text-main: #f8fafc;
                     --text-muted: #64748b;
                 }
-
                 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
                 body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; background-image: radial-gradient(circle at 50% 0%, #111827 0%, var(--bg-main) 70%); }
-
                 header { background: rgba(13, 18, 31, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); padding: 18px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
                 .logo { color: var(--text-main); font-size: 24px; font-weight: 900; letter-spacing: 1.5px; text-decoration: none; display: flex; align-items: center; gap: 10px; }
                 .logo span { color: var(--accent-gold); text-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
-                
                 .discord-btn { background: linear-gradient(135deg, #5865F2, #4752C4); color: white; padding: 10px 22px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 13px; letter-spacing: 0.5px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.3); display: flex; align-items: center; gap: 8px; }
                 .discord-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(88, 101, 242, 0.5); }
-
                 .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
-                
                 .hero-section { text-align: center; margin-bottom: 40px; }
                 .hero-section h1 { font-size: 36px; font-weight: 800; margin-bottom: 8px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
                 .hero-section p { color: var(--text-muted); font-size: 15px; }
-
                 .categories { display: flex; justify-content: center; gap: 10px; margin-bottom: 35px; flex-wrap: wrap; }
                 .cat-btn { background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border-color); padding: 10px 18px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.25s ease; display: flex; align-items: center; gap: 8px; }
                 .cat-btn:hover { background: var(--bg-hover); color: var(--text-main); border-color: #334155; transform: translateY(-1px); }
                 .cat-btn.active { background: var(--bg-hover); border-color: var(--accent-gold); color: var(--accent-gold); box-shadow: 0 0 20px var(--accent-glow); }
-
                 .table-container { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
                 table { width: 100%; border-collapse: collapse; text-align: left; }
                 th { background: rgba(255,255,255,0.02); color: var(--text-muted); padding: 16px 24px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-color); }
                 td { padding: 18px 24px; border-bottom: 1px solid var(--border-color); font-size: 14px; font-weight: 500; }
                 tr:last-child td { border-bottom: none; }
                 tr:hover td { background: var(--bg-hover); }
-
                 .rank-badge { font-weight: 800; font-size: 14px; }
                 .rank-1 { color: #facc15; text-shadow: 0 0 10px rgba(250, 204, 21, 0.4); }
                 .rank-2 { color: #e2e8f0; }
                 .rank-3 { color: #b45309; }
-
                 .player-cell { display: flex; align-items: center; gap: 14px; }
                 .player-avatar { width: 34px; height: 34px; border-radius: 8px; background: var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
                 .player-name { font-weight: 700; color: var(--text-main); }
-
                 .tier-tag { background: rgba(245, 158, 11, 0.1); color: var(--accent-gold); border: 1px solid rgba(245, 158, 11, 0.3); padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px; display: inline-block; }
                 .gamemode-tag { text-transform: uppercase; font-size: 11px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.04); padding: 4px 8px; border-radius: 4px; }
-
                 .empty-msg { text-align: center; color: var(--text-muted); padding: 60px !important; font-size: 15px; font-weight: 500; }
             </style>
         </head>
@@ -90,22 +75,19 @@ app.get('/', (req, res) => {
                     <span>Discord Server</span>
                 </a>
             </header>
-
             <div class="container">
                 <div class="hero-section">
                     <h1>Official Leaderboard</h1>
                     <p>Discover the top ranked players across all competitive categories.</p>
                 </div>
-
                 <div class="categories">
                     ${categories.map(cat => `
-                        <button class="cat-btn ${cat.id === 'overall' ? 'active' : ''}" onclick="selectCategory('${cat.id}')">
+                        <button class="cat-btn ${cat.id === 'overall' ? 'active' : ''}" onclick="selectCategory('${cat.id}', event)">
                             ${cat.icon}
                             <span>${cat.name}</span>
                         </button>
                     `).join('')}
                 </div>
-
                 <div class="table-container">
                     <table>
                         <thead>
@@ -123,14 +105,16 @@ app.get('/', (req, res) => {
                     </table>
                 </div>
             </div>
-
             <script>
                 const supabaseUrl = "https://amdasdkbckgyktwnyffu.supabase.co";
                 const supabaseKey = "sb_publishable_YSy03s9xgaK1YJiA01PKmA_HhGdVyUB";
 
                 const tierPointsMap = {
-                    "HT1": 150, "LT1": 135, "HT2": 120, "LT2": 105, "HT3": 90,
-                    "LT3": 75, "LT4": 60, "LT4": 45, "HT5": 30, "LT5": 15
+                    "HT1": 200, "LT1": 180, 
+                    "HT2": 160, "LT2": 140, 
+                    "HT3": 120, "LT3": 100, 
+                    "HT4": 80,  "LT4": 60, 
+                    "HT5": 40
                 };
 
                 async function loadLeaderboard(category = 'overall') {
@@ -145,9 +129,7 @@ app.get('/', (req, res) => {
                             }
                         });
                         
-                        if (!res.ok) {
-                            throw new Error('Database response failed');
-                        }
+                        if (!res.ok) throw new Error('Database response failed');
 
                         const data = await res.json();
                         
@@ -161,7 +143,7 @@ app.get('/', (req, res) => {
                             const playerTier = row.tier || row.tier_earned || 'N/A';
                             const playerGamemode = (row.gamemode || 'vanilla').toLowerCase();
                             const tierUpper = String(playerTier).toUpperCase();
-                            const points = tierPointsMap[tierUpper] || row.points || 50;
+                            const points = row.points || tierPointsMap[tierUpper] || 40;
                             
                             return { playerName, playerTier, playerGamemode, points };
                         });
@@ -201,13 +183,13 @@ app.get('/', (req, res) => {
                                 </tr>
                             \`;
                         }).join('');
-                    }-catch (err) {
+                    } catch (err) {
                         console.error(err);
                         tbody.innerHTML = '<tr><td colspan="5" class="empty-msg" style="color: #f87171;">Failed to connect to database. Please check RLS policies.</td></tr>';
                     }
                 }
 
-                function selectCategory(category) {
+                function selectCategory(category, event) {
                     document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
                     event.currentTarget.classList.add('active');
                     loadLeaderboard(category);
