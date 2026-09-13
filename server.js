@@ -4,7 +4,7 @@ app.use(express.json());
 
 const tierPoints = {
     "HT1": 150, "LT1": 135, "HT2": 120, "LT2": 105, "HT3": 90,
-    "LT3": 75, "LT4": 60, "LT4": 45, "HT5": 30, "LT5": 15
+    "LT3": 75, "LT4": 60, "HT5": 45, "HT5": 30, "LT5": 15
 };
 
 const categories = [
@@ -128,12 +128,16 @@ app.get('/', (req, res) => {
                 const supabaseUrl = "https://amdasdkbckgyktwnyffu.supabase.co";
                 const supabaseKey = "sb_publishable_YSy03s9xgaK1YJiA01PKmA_HhGdVyUB";
 
+                const tierPointsMap = {
+                    "HT1": 150, "LT1": 135, "HT2": 120, "LT2": 105, "HT3": 90,
+                    "LT3": 75, "LT4": 60, "LT4": 45, "HT5": 30, "LT5": 15
+                };
+
                 async function loadLeaderboard(category = 'overall') {
                     const tbody = document.getElementById('leaderboard');
                     tbody.innerHTML = '<tr><td colspan="5" class="empty-msg">Fetching rankings...</td></tr>';
 
                     try {
-                        // تم تحديث اسم الجدول إلى results ليتطابق مع البوت
                         const res = await fetch(\`\${supabaseUrl}/rest/v1/results?select=*\`, {
                             headers: {
                                 'apikey': supabaseKey,
@@ -157,7 +161,7 @@ app.get('/', (req, res) => {
                             const playerTier = row.tier || row.tier_earned || 'N/A';
                             const playerGamemode = (row.gamemode || 'vanilla').toLowerCase();
                             const tierUpper = String(playerTier).toUpperCase();
-                            const points = row.points || (tierPoints[tierUpper] || 50);
+                            const points = tierPointsMap[tierUpper] || row.points || 50;
                             
                             return { playerName, playerTier, playerGamemode, points };
                         });
@@ -197,7 +201,7 @@ app.get('/', (req, res) => {
                                 </tr>
                             \`;
                         }).join('');
-                    } catch (err) {
+                    }-catch (err) {
                         console.error(err);
                         tbody.innerHTML = '<tr><td colspan="5" class="empty-msg" style="color: #f87171;">Failed to connect to database. Please check RLS policies.</td></tr>';
                     }
